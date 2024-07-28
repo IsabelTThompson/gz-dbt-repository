@@ -1,12 +1,15 @@
 version: 2
 
 sources:
-  - name: gz_raw_data
-    description: raw data
+  - name: raw
+    schema: gz_raw_data
     tables:
-     - name: raw_gz_product
+     - name: product
+       identifier: raw_gz_product
        description: product
-     - name: raw_gz_sales
+     - name: sales
+       identifier: raw_gz_sales
        description: sales
-     - name: raw_gz_ship
+     - name: ship
+       identifier: raw_gz_ship
        description: ship
