@@ -1,5 +1,18 @@
 version: 2
 
+models:
+- name: int_sales_margin
+  tests:
+    - unique:
+        column_name: "(orders_id || '-' || products_id)"
+  columns:
+    - name: orders_id
+      tests:
+        - not_null
+    - name: products_id
+      tests:
+        - not_null
+
 sources:
   - name: raw
     schema: gz_raw_data
@@ -33,6 +46,10 @@ sources:
        tests:
         - unique: 
             column_name: "(orders_id || '-' || pdt_id)"
+        - not_null:
+            column_name: "(orders_id || '-' || pdt_id)"
+       freshness:
+          warn_after: { count: 90, period: day }
      - name: ship
        identifier: raw_gz_ship
        description: ship   
@@ -48,5 +65,3 @@ sources:
           description: the cost of preparing the parcel in the warehouse
         - name: ship_cost
           description: the shipping cost paid by Greenweez to the carrier / transporter
-     
-        
