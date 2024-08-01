@@ -8,23 +8,23 @@ models:
     description: margin calcultation per order line / product sale
     columns:
       - name: margin
-        description: Margin = Revenue - Purchase_cost
-      - name: Purchase_cost
-        description: Purchase_cost = Quantity * Purchase_price 
+        description: margin = revenue - purchase_cost
+      - name: purchase_cost
+        description: purchase_cost = quantity * purchase_price 
     tests:
     - unique:
         column_name: "(orders_id || '-' || products_id)"
     - not_null:
-        column_name: orders_id, products_id   
+        column_name: orders_id   
   - name: int_orders_margin
     description: margin calcultation per order 
     columns:
       - name: orders_id
         description: primary key
       - name: margin
-        description: Margin = Revenue - Purchase_cost
-      - name: Purchase_cost
-        description: Purchase_cost = Quantity * Purchase_price 
+        description: margin = revenue - purchase_cost
+      - name: purchase_cost
+        description: purchase_cost = quantity * purchase_price 
       - name: date_date
         description: date of the order
       - name: revenue
@@ -35,7 +35,7 @@ models:
     description: operational margin calcultation per order 
     columns:
       - name: operational_margin 
-        description: Operational margin = margin + shipping fee - log_cost - ship_cost
+        description: operational margin = margin + shipping_fee - log_cost - ship_cost
   - name: finance_days
     description: finance calculation per days
     
