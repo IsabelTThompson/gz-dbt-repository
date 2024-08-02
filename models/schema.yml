@@ -38,8 +38,7 @@ models:
         description: operational margin = margin + shipping_fee - log_cost - ship_cost
   - name: finance_days
     description: finance calculation per days
-    
-
+      
 sources:
   - name: raw
     schema: gz_raw_data
@@ -92,3 +91,6 @@ sources:
           description: the cost of preparing the parcel in the warehouse
         - name: ship_cost
           description: the shipping cost paid by Greenweez to the carrier / transporter
+
+
+  
