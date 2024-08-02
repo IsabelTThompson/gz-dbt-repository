@@ -1,15 +1,96 @@
 version: 2
 
+models:
+  - name: stg_raw_product
+  - name: stg_raw_sales
+  - name: stg_raw_ship
+  - name: int_sales_margin
+    description: margin calcultation per order line / product sale
+    columns:
+      - name: margin
+        description: margin = revenue - purchase_cost
+      - name: purchase_cost
+        description: purchase_cost = quantity * purchase_price 
+    tests:
+    - unique:
+        column_name: "(orders_id || '-' || products_id)"
+    - not_null:
+        column_name: orders_id   
+  - name: int_orders_margin
+    description: margin calcultation per order 
+    columns:
+      - name: orders_id
+        description: primary key
+      - name: margin
+        description: margin = revenue - purchase_cost
+      - name: purchase_cost
+        description: purchase_cost = quantity * purchase_price 
+      - name: date_date
+        description: date of the order
+      - name: revenue
+        description: sum of revenue per order 
+      - name: quantity
+        description: sum of quantity per order
+  - name: int_orders_operational
+    description: operational margin calcultation per order 
+    columns:
+      - name: operational_margin 
+        description: operational margin = margin + shipping_fee - log_cost - ship_cost
+  - name: finance_days
+    description: finance calculation per days
+      
 sources:
   - name: raw
     schema: gz_raw_data
+    description: greenweez raw data source
     tables:
      - name: product
        identifier: raw_gz_product
-       description: product
+       description: product   
+       columns:
+        - name: products_id
+          description: primary key of the table
+          tests:
+            - unique
+            - not_null
+        - name: purchase_price
+          description: purchase price of the product
      - name: sales
        identifier: raw_gz_sales
-       description: sales
+       description: sales of greenweez / we have found one row per products_id found in each orders_id
+       columns: 
+        - name: date_date
+          description: the date of purchase
+        - name: orders_id
+          description: foreign key to ship
+        - name: pdt_id
+          description: foreign key to product
+        - name: revenue
+          description: the amount paid by customer to purchase product, revenue = quantity * selling_price
+        - name: quantity
+          description: the quantity of product purchased for this order
+       tests:
+        - unique: 
+            column_name: "(orders_id || '-' || pdt_id)"
+        - not_null:
+            column_name: "(orders_id || '-' || pdt_id)"
+       freshness:
+          warn_after: { count: 90, period: day }
      - name: ship
        identifier: raw_gz_ship
-       description: ship
+       description: ship   
+       columns: 
+        - name: orders_id
+          description: primary key of the table
+          tests:
+            - unique
+            - not_null
+        - name: shipping_fee
+          description: the price the customer pays for shipping
+        - name: log_cost
+          description: the cost of preparing the parcel in the warehouse
+        - name: ship_cost
+          description: the shipping cost paid by Greenweez to the carrier / transporter
+
+
+  
