@@ -1,6 +1,10 @@
 version: 2
 
 models:
+  - name: stg_raw_adwords
+  - name: stg_raw_bing
+  - name: stg_raw_criteo
+  - name: stg_raw_facebook
   - name: stg_raw_product
   - name: stg_raw_sales
   - name: stg_raw_ship
@@ -36,9 +40,62 @@ models:
     columns:
       - name: operational_margin 
         description: operational margin = margin + shipping_fee - log_cost - ship_cost
+  - name: int_campaigns
+    description: data from all campaigns
+    columns:
+      - name: date_date
+      - name: paid_source
+        tests:
+          - not_null
+      - name: campaign_key
+      - name: campaign_name
+        tests:
+          - not_null
+      - name: ads_cost
+      - name: impression
+      - name: click
+    tests:
+      - unique: 
+         column_name: "(campaign_key || '-' || date_date)"
+  - name: int_campaigns_day
+    description: aggregated data from all campaigns for each day
+    columns:
+      - name: date_date
+      - name: ads_cost
+      - name: ads_impression
+      - name: ads_clicks
   - name: finance_days
     description: finance calculation per days
+  - name: finance_campaigns_day
+    description: aggregated financial data for ads campaigns for each day
+    columns:
+      - name: ads_margin
+        description: operational_margin - ads_cost
+        tests:
+          - not_null    
+      - name: average_basket
+        description: average basket cost for each day
+        tests:
+          - not_null
+  - name: finance_campaigns_month
+    description: aggregated financial data for ads campaigns for each month
+    columns:
+      - name: datemonth
+      - name: ads_margin
+      - name: average_basket
+      - name: operational_margin
+      - name: ads_cost
+      - name: ads_impression
+      - name: ads_clicks
+      - name: quantity
+      - name: revenue
+      - name: purchase_cost
+      - name: margin
+      - name: shipping_fee
+      - name: log_cost
+      - name: ship_cost
       
+                
 sources:
   - name: raw
     schema: gz_raw_data
@@ -91,6 +148,64 @@ sources:
           description: the cost of preparing the parcel in the warehouse
         - name: ship_cost
           description: the shipping cost paid by Greenweez to the carrier / transporter
+
+     - name: adwords
+       identifier: raw_gz_adwords
+       description: data on adwords campaigns
+       columns: 
+         - name: date_date
+         - name: paid_source
+         - name: campaign_key
+         - name: campaign_name
+         - name: ads_cost
+         - name: impression
+         - name: click
+
+     - name: bing
+       identifier: raw_gz_bing
+       description: data on bing campaigns
+       columns:
+          - name: date_date
+          - name: paid_source
+          - name: campaign_key
+          - name: campaign_name
+          - name: ads_cost
+          - name: impression
+          - name: click
+
+     - name: criteo
+       identifier: raw_gz_criteo
+       description: data on criteo campaigns
+       columns:
+         - name: date_date
+         - name: paid_source
+         - name: campaign_key
+         - name: campaign_name
+         - name: ads_cost
+         - name: impression
+         - name: click
+
+     - name: facebook
+       identifier: raw_gz_facebook
+       description: data on facebook campaigns
+       columns: 
+         - name: date_date
+         - name: paid_source
+         - name: campaign_key
+         - name: campaign_name
+         - name: ads_cost
+         - name: impression
+         - name: click
+        
+
+
+
+
+
+
+
+
+
 
 
   
