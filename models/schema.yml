@@ -66,7 +66,36 @@ models:
       - name: ads_clicks
   - name: finance_days
     description: finance calculation per days
+  - name: finance_campaigns_day
+    description: aggregated financial data for ads campaigns for each day
+    columns:
+      - name: ads_margin
+        description: operational_margin - ads_cost
+        tests:
+          - not_null    
+      - name: average_basket
+        description: average basket cost for each day
+        tests:
+          - not_null
+  - name: finance_campaigns_month
+    description: aggregated financial data for ads campaigns for each month
+    columns:
+      - name: datemonth
+      - name: ads_margin
+      - name: average_basket
+      - name: operational_margin
+      - name: ads_cost
+      - name: ads_impression
+      - name: ads_clicks
+      - name: quantity
+      - name: revenue
+      - name: purchase_cost
+      - name: margin
+      - name: shipping_fee
+      - name: log_cost
+      - name: ship_cost
       
+                
 sources:
   - name: raw
     schema: gz_raw_data
